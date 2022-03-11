@@ -16,6 +16,9 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.List;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -62,6 +65,7 @@ public final class Main {
     // TODO: create a call to Spark.post to make a POST request to a URL which
     // will handle getting matchmaking results for the input
     // It should only take in the route and a new ResultsHandler
+    Spark.post("/matches", new ResultsHandler());
     Spark.options("/*", (request, response) -> {
       String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
       if (accessControlRequestHeaders != null) {
@@ -110,13 +114,30 @@ public final class Main {
       // TODO: Get JSONObject from req and use it to get the value of the sun, moon,
       // and rising
       // for generating matches
+      String sun = null;
+      String moon = null;
+      String rising = null;
+
+      try {
+        JSONObject jObj = new JSONObject(req.body());
+        sun = jObj.getString("sun");
+        moon = jObj.getString("moon");
+        rising = jObj.getString("rising");
+
+        List<String> lists = MatchMaker.makeMatches(sun, moon, rising);
+        Gson GSON = new Gson();
+        return GSON.toJson(lists);
+
+
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
 
       // TODO: use the MatchMaker.makeMatches method to get matches
 
       // TODO: create an immutable map using the matches
 
       // TODO: return a json of the suggestions (HINT: use GSON.toJson())
-      Gson GSON = new Gson();
       return null;
     }
   }
