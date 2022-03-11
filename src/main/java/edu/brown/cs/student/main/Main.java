@@ -65,7 +65,7 @@ public final class Main {
     // TODO: create a call to Spark.post to make a POST request to a URL which
     // will handle getting matchmaking results for the input
     // It should only take in the route and a new ResultsHandler
-    Spark.post("/matches", new ResultsHandler());
+    Spark.post("/match", new ResultsHandler());
     Spark.options("/*", (request, response) -> {
       String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
       if (accessControlRequestHeaders != null) {
@@ -114,19 +114,20 @@ public final class Main {
       // TODO: Get JSONObject from req and use it to get the value of the sun, moon,
       // and rising
       // for generating matches
-      String sun = null;
-      String moon = null;
-      String rising = null;
+      // String sun = null;
+      // String moon = null;
+      // String rising = null;
 
       try {
         JSONObject jObj = new JSONObject(req.body());
-        sun = jObj.getString("sun");
-        moon = jObj.getString("moon");
-        rising = jObj.getString("rising");
+        String sun = jObj.getString("sun");
+        String moon = jObj.getString("moon");
+        String rising = jObj.getString("rising");
 
-        List<String> lists = MatchMaker.makeMatches(sun, moon, rising);
+        List<String> matches = MatchMaker.makeMatches(sun, moon, rising);
+        Map<String, List<String>> matchesMap = Map.of("matches", matches);
         Gson GSON = new Gson();
-        return GSON.toJson(lists);
+        return GSON.toJson(matchesMap);
 
 
       } catch (JSONException e) {

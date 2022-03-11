@@ -39,14 +39,14 @@ function postAndUpdate(): void {
     //  HINT: use sun.value to get the value of the sun field, for example
   };
 
-  console.log(postParameters)
+  console.log(postParameters);
 
   // TODO: make a POST request using fetch to the URL to handle this request you set in your Main.java
   //  HINT: check out the POST REQUESTS section of the lab and of the front-end guide.
   //  Make sure you add "Access-Control-Allow-Origin":"*" to your headers.
   //  Remember to add a type annotation for the response data using the Matches type you defined above!
 
-  fetch('http://localhost:4567/matches', {
+  fetch("http://localhost:4567/match", {
     method: "POST",
     headers: {
       'Content-Type': 'application/json',
@@ -54,7 +54,8 @@ function postAndUpdate(): void {
     },
     body: JSON.stringify(postParameters),
   })
-  .then((response) => response.json()).then((match: Matches) => updateSuggestions(match.matches));
+  .then((response) => response.json())
+  .then((match: Matches) => updateSuggestions(match.matches));
   // TODO: Call and fill in the updateSuggestions method in one of the .then statements in the Promise
   //  Parse the JSON in the response object
   //  HINT: remember to get the specific field in the JSON you want to use
@@ -66,6 +67,7 @@ function updateSuggestions(matches: string[]): void {
   //  NOTE: you should use <li> (list item) tags to wrap each element. When you do so,
   //  make sure to add the attribute 'tabindex="0"' (for example: <li tabindex="0">{your element}</li>).
   //  This makes each element selectable via screen reader.
+  console.log(matches);
   for (const m of matches) {
     suggestions.innerHTML += `<li tabindex="0">${m}</li>` ;
   }
